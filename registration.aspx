@@ -6,6 +6,8 @@
      <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.14/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css">
 
     <title>Contact Information Update</title>
     <style>
@@ -268,7 +270,7 @@
                 <br />
                 <label for="ownerAddress">Owner's Address:</label>
                 <br />
-                <asp:TextBox runat="server" placeholder="Enter the owner's address" required="required" name="ownerAddress" id="ownerAddress"></asp:TextBox>
+                <asp:TextBox runat="server" placeholder="Enter the owner's address" required="required" name="ownerAddress" id="ownerAddress"></asp:TextBox><button name="btnTest" id="btnTest">Test</button>
                 <br />
                 <br />
                 <label for="ownerEmail">Owner's E-Mail:</label>
@@ -614,7 +616,23 @@
         <!-- All End -->
     </form>
 
+     <script src="http://js.arcgis.com/3.14/"></script>
 
+     <script>
+         require(["esri/tasks/AddressCandidate",
+                   "dojo/_base/array"], function (AddressCandidate,array) {
+                       on(dom.byId("btnTest"),"click",function() {
+                           array.forEach(addressCandidates, function(candidate) {
+                               if (candidate.score > score && candidate.attributes.Loc_name === document.getElementById("ownerAddress").value) {
+                                   stop = candidate;
+                                   score = candidate.score;
+                                   console.log = score;
+                               }
+                           })
+                    });
+                           
+                                   
+     </script>
      <script>
         var ii = 2;
         function addAddress() {
