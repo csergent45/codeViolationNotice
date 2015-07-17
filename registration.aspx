@@ -626,6 +626,7 @@
                                if (candidate.score > score && candidate.attributes.Loc_name === document.getElementById("ownerAddress").value) {
                                    stop = candidate;
                                    score = candidate.score;
+                                   // Display the score on the console.
                                    console.log = score;
                                }
                            })
