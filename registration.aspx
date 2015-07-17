@@ -620,19 +620,27 @@
 
      <script>
          require(["esri/tasks/AddressCandidate",
-                   "dojo/_base/array"], function (AddressCandidate,array) {
-                       on(dom.byId("btnTest"),"click",function() {
-                           array.forEach(addressCandidates, function(candidate) {
+                   "dojo/_base/array",
+                    "esri/dijit/Search",
+                    "esri/tasks/locator",
+                    "dojo/on",
+                    "dojo/dom",
+                    "dojo/domReady!"], function (AddressCandidate, array, Search, Locator, on, dom) {
+
+                        var locator = new Locator("http://maps.decaturil.gov/arcgis/rest/services/Public/WebAddressLocator/GeocodeServer");
+
+                       on(dom.byId("btnTest"), "click", function () {
+                           array.forEach(addressCandidates, function (candidate) {
                                if (candidate.score > score && candidate.attributes.Loc_name === document.getElementById("ownerAddress").value) {
                                    stop = candidate;
                                    score = candidate.score;
                                    // Display the score on the console.
-                                   console.log = score;
+                                   console.log(score);
                                }
-                           })
-                    });
-                           
-                                   
+                           });
+                       });
+                   });
+        
      </script>
      <script>
         var ii = 2;
