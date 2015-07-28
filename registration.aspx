@@ -1,4 +1,5 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="registration.aspx.vb" Inherits="registration" %>
+﻿
+<%@ Page Language="VB" AutoEventWireup="false" CodeFile="registration.aspx.vb" Inherits="registration" %>
 <!DOCTYPE html>
 
 <html lang="en">
@@ -9,8 +10,7 @@
     <link rel="stylesheet" href="http://js.arcgis.com/3.14/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css">
 
-    <title>Contact Information Update</title>
-    <style>
+    <titl>Contact Information Update</titl
         body,
         #btnAddTenant,#btnAddProperty,#btnSubmitForm {
             background-color: #8DB1CD;
@@ -22,7 +22,8 @@
             margin-right: auto;
             height: 3300px;
             width: 700px;
-            border-radius: 50px;
+            border-radius: 50px;e>
+    <style>
             z-index: 0;
             position: absolute;
         }
@@ -249,6 +250,8 @@
 <body>
     
     <form id="frmRegistration" runat="server">
+        <asp:ScriptManager ID="scriptManager"
+            runat="server"></asp:ScriptManager>
         <!-- All Begin -->
         <div id="all">
             <!-- Title Div Begin -->
@@ -259,40 +262,40 @@
                 <p>Use this form to register your email address with the City. Additionally, you may register a tenant's email address.</p>
             </div>
             <!-- Title Div End -->
-
+            
             <!-- Letter Begin -->
             <div id="letter">
                 <label for="ownerName">Owner:</label>
                 <br />
                 
-                <asp:TextBox runat="server" type="text" placeholder="Enter the owner's name" required="required" name="ownerName" ID="ownerName" autofocus="autofocus"></asp:TextBox>
+                <asp:TextBox runat="server" type="text" Text="John Doe" placeholder="Enter the owner's name" required="required" name="ownerName" ID="ownerName" autofocus="autofocus"></asp:TextBox>
                 <br />
                 <br />
                 <label for="ownerAddress">Owner's Address:</label>
                 <br />
-                <asp:TextBox runat="server" placeholder="Enter the owner's address" required="required" name="ownerAddress" id="ownerAddress"></asp:TextBox><button name="btnTest" id="btnTest">Test</button>
+                <asp:TextBox runat="server" Text="111 S Main" placeholder="Enter the owner's address" required="required" name="ownerAddress" id="ownerAddress"></asp:TextBox><asp:UpdatePanel runat="server"><ContentTemplate><button name="btnTest" id="btnTest">Test</button></ContentTemplate></asp:UpdatePanel>
                 <br />
                 <br />
                 <label for="ownerEmail">Owner's E-Mail:</label>
                 <br />
-                <asp:TextBox runat="server" type="email" placeholder="Enter the owner's E-Mail" required="required" name="ownerEmail" id="ownerEmail"></asp:TextBox>
+                <asp:TextBox runat="server" type="email" Text="anywhere@yahoo.com" placeholder="Enter the owner's E-Mail" required="required" name="ownerEmail" id="ownerEmail"></asp:TextBox>
                 <br />
                 <br />
                 <label for="ownerPhone">Owner's Phone Number (to verify accuracy only):</label>
                 <br />
-                <asp:TextBox runat="server" type="tel" placeholder="Enter the owner's Phone" required="required" name="ownerPhone" id="ownerPhone"></asp:TextBox>
+                <asp:TextBox runat="server" type="tel" Text="217-555-1212" placeholder="Enter the owner's Phone" required="required" name="ownerPhone" id="ownerPhone"></asp:TextBox>
                 <br />
                 <br />
                 <label for="ownerLastFour">Owner's Last 4 Digits of SSN (to verify accuracy only):</label>
                 <br />
-                <asp:TextBox runat="server" type="text" placeholder="Enter the owner's last four digits of SSN" required="required" name="ownerLastFour" maxlength="4" title="ssn" pattern="[0-9]*" id="ownerLastFour"></asp:TextBox>
+                <asp:TextBox runat="server" type="text" Text="1111" placeholder="Enter the owner's last four digits of SSN" required="required" name="ownerLastFour" maxlength="4" title="ssn" pattern="[0-9]*" id="ownerLastFour"></asp:TextBox>
                 <br />
                 <br />
                 <br />
                 <div id="property1">
                     <label for="propertyAddress1">Property Address:</label>
                     <br />
-                    <asp:TextBox runat="server" type="text" placeholder="Enter the property address" required="required" name="propertyAddress1" id="propertyAddress1"></asp:TextBox>
+                    <asp:TextBox runat="server" type="text" Text="123 Main St" placeholder="Enter the property address" required="required" name="propertyAddress1" id="propertyAddress1"></asp:TextBox>
                     <br />
                     <br />
                 </div>
@@ -619,38 +622,39 @@
      <script src="http://js.arcgis.com/3.14/"></script>
 
      <script>
-         require(["esri/tasks/AddressCandidate",
-                   "dojo/_base/array",
-                    "esri/dijit/Search",
-                    "esri/tasks/locator",
-                    "dojo/on",
-                    "dojo/dom",
-                    "dojo/domReady!"], function (AddressCandidate, array, Search, Locator, on, dom) {
+         require([
+  'dojo/on',
+  'esri/tasks/locator'
+         ], function (on, Locator) {
+             var locator = new Locator("http://maps.decaturil.gov/arcgis/rest/services/Public/WebAddressLocator/GeocodeServer");
+             on(document.getElementById('btnTest'), 'click', function (e) {
+                 var node = document.getElementById('ownerAddress');
+                 // according to your service it takes Single Line  
+                 var params = {
+                     "Single Line Input": node.value
+                 };
+                 locator.addressToLocations(params).then(function (addressCandidates) {
+                     console.log('success', addressCandidates);
+                     var adresses = addressCandidates.map(function (x) {
+                         return x.address;
+                     });
+                     console.log(adresses);
+                 }).otherwise(function (err) {
+                     console.log('somethings wrong', err);
+                 });
+             });
+         });
 
-                        var locator = new Locator("http://maps.decaturil.gov/arcgis/rest/services/Public/WebAddressLocator/GeocodeServer");
-
-                       on(dom.byId("btnTest"), "click", function () {
-                           array.forEach(addressCandidates, function (candidate) {
-                               if (candidate.score > score && candidate.attributes.Loc_name === document.getElementById("ownerAddress").value) {
-                                   stop = candidate;
-                                   score = candidate.score;
-                                   // Display the score on the console.
-                                   console.log(score);
-                               }
-                           });
-                       });
-                   });
-        
      </script>
      <script>
-        var ii = 2;
-        function addAddress() {
-            if (ii < 7) {
-               
-                document.getElementById("tenant" + ii).style.display = "";
-                ii++;
-            }
-        }
+         var ii = 2;
+         function addAddress() {
+             if (ii < 7) {
+
+                 document.getElementById("tenant" + ii).style.display = "";
+                 ii++;
+             }
+         }
     </script>
 
 
