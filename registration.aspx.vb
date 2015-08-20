@@ -3,19 +3,42 @@ Partial Class registration
     Inherits System.Web.UI.Page
 
     Protected Sub btnSubmitForm_Click(sender As Object, e As EventArgs) Handles btnSubmitForm.Click
-        doEmail()
-        Response.Redirect("success.html")
+        Label1.Text = ""
+        If HIPControl1.IsValid = False Then
+            Label1.Text = "Please try again."
+
+            SetFocus("btnSubmitForm")
+
+
+        Else
+
+            doEmail()
+            Response.Redirect("success.html")
+            Label1.Text = ""
+        End If
+
     End Sub
 
     Protected Sub doEmail()
-        Dim toAddress = "TFloyd@decaturil.gov"
+        Dim toAddress = "dsergent@decaturil.gov"
+        'Dim toAddress = "tmfloyd@decaturil.gov"
         Dim sb As New StringBuilder
+        Dim notifyMe As String
 
         Dim mm As New System.Net.Mail.MailMessage("webmaster@decaturil.gov", toAddress)
+        
 
         mm.Subject = "Contact Information Update"
 
+        If chkNotify.Checked = True Then
+
+            notifyMe = "Please let me know when I can register vacant lots."
+        Else
+            notifyMe = "The owner does not request to be notified of vacant lots."
+        End If
+
         mm.Body = "Owner: " & ownerName.Text & vbCrLf & vbCrLf & _
+            "Notifications of Vacant Lots: " & notifyMe & vbCrLf & vbCrLf & _
             "Owner Address: " & ownerAddress.Text & vbCrLf & vbCrLf & _
             "Owner E-Mail: " & ownerEmail.Text & vbCrLf & vbCrLf & _
             "Owner Phone: " & ownerPhone.Text & vbCrLf & vbCrLf & _
@@ -286,4 +309,6 @@ Partial Class registration
 
 
     End Sub
+
+    
 End Class

@@ -1,33 +1,36 @@
-﻿
-<%@ Page Language="VB" AutoEventWireup="false" CodeFile="registration.aspx.vb" Inherits="registration" %>
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="registration.aspx.vb" Inherits="registration" %>
+<%@ Register TagPrefix="cc1" Namespace="Clearscreen.SharpHIP" Assembly="Clearscreen.SharpHIP" %>
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 <head runat="server">
      <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="http://js.arcgis.com/3.14/dijit/themes/claro/claro.css">
     <link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css">
+    <script src="http://js.arcgis.com/3.14/"></script>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-    <titl>Contact Information Update</titl
-        body,
+    <title>Contact Information Update</title>
+    <style>
+            body,
         #btnAddTenant,#btnAddProperty,#btnSubmitForm {
             background-color: #8DB1CD;
         }
-
         div#all {
             background-color: white;
             margin-left: 20%;
             margin-right: auto;
             height: 3300px;
             width: 700px;
-            border-radius: 50px;e>
-    <style>
+            border-radius: 50px;
             z-index: 0;
             position: absolute;
         }
-
         #instructions {
             left: 5%;
             padding: 25px;
@@ -44,6 +47,11 @@
 
         input {
             width: 350px;
+        }
+
+        #chkNotify
+        {
+            width:25px;
         }
 
         #submit,
@@ -238,6 +246,20 @@
                 font-weight: bold;
             }
 
+           #gridDiv {
+            height: 100%;
+            width: 100%;
+        }
+
+        #myModal {
+            height: 100%;
+            width: 100%;
+        }
+
+        .modal-body {
+            height: 300px;
+        }   
+
         </style>
 
 
@@ -254,17 +276,24 @@
             runat="server"></asp:ScriptManager>
         <!-- All Begin -->
         <div id="all">
+            <br /><br /><br />
             <!-- Title Div Begin -->
             <div id="titlediv">
                 <p id="title"><img src="images/cityLogo.png" />  Contact Information Update</p>
             </div>
             <div id="instructions">
                 <p>Use this form to register your email address with the City. Additionally, you may register a tenant's email address.</p>
+                
             </div>
             <!-- Title Div End -->
             
             <!-- Letter Begin -->
+          
+
+                
             <div id="letter">
+                <p><asp:CheckBox ID="chkNotify"  runat ="server" Text="<strong>Disclaimer</strong>: We are unable to accept vacant lot information at this time. We apologize for the inconvenience. 
+If you would like to be notified when this capability is available, check here." /></p>
                 <label for="ownerName">Owner:</label>
                 <br />
                 
@@ -273,7 +302,7 @@
                 <br />
                 <label for="ownerAddress">Owner's Address:</label>
                 <br />
-                <asp:TextBox runat="server" Text="111 S Main" placeholder="Enter the owner's address" required="required" name="ownerAddress" id="ownerAddress"></asp:TextBox><asp:UpdatePanel runat="server"><ContentTemplate><button name="btnTest" id="btnTest">Test</button></ContentTemplate></asp:UpdatePanel>
+                <asp:TextBox runat="server" Text="111 S Main" placeholder="Enter the owner's address" required="required" name="ownerAddress" id="ownerAddress"></asp:TextBox>
                 <br />
                 <br />
                 <label for="ownerEmail">Owner's E-Mail:</label>
@@ -599,7 +628,7 @@
                         <asp:TextBox runat="server" type="text" placeholder="Enter an additional tenant address" name="tenantPropertyAddress6" id="tenantPropertyAddress6"></asp:TextBox>
                         <br />
                         <br />
-                        <label for="tenantEmailAddress1">E-Mail Address:</label>
+                        <label for="tenantEmailAddress6">E-Mail Address:</label>
                         <br />
                         <asp:TextBox runat="server" type="text" placeholder="Enter an additional tenant E-Mail address " name="tenantEmailAddress6" id="tenantEmailAddress6"></asp:TextBox>
                     </div>
@@ -610,41 +639,373 @@
                 <button type="button" id="btnAddTenant" onclick="addAddress()">Add another Tenant</button>
                 <br />
                 <br />
+                <br />
+                
+                <cc1:HIPControl id="HIPControl1" runat="server" BackgroundPatternColor="Transparent" BackgroundColor="10, 65, 107" FontSize="16" ImageBorderColor="White" RandomCodeLength="True" TextColor="White" TextPattern="Horizontal" TextPatternColor="White" ValidationIgnoreCase="True" AutoRedirect="false" ValidationMode="Forms" />
+                <br />
+                 <asp:Label ID="Label1" runat="server" Font-Bold="True"></asp:Label>
+                <br />
                 <asp:Button runat="server" ID="btnSubmitForm" Text="Send" />
                 
                 <br />
+                <br />
+                
             </div>
             <!-- Letter End -->
+          
         </div>
         <!-- All End -->
+
+        <!-- Container Begin -->
+            <div id="mainDiv" class="container">
+
+                <!-- Modal Begin -->
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Select an Address</h4>
+
+                            </div>
+
+                            <div class="modal-body">
+                                <div id="gridDiv"></div>
+                            </div>
+                            <div class="modal-footer">
+
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal End -->
+            </div>
+            <!-- Container End -->
     </form>
 
      <script src="http://js.arcgis.com/3.14/"></script>
 
      <script>
-         require([
-  'dojo/on',
-  'esri/tasks/locator'
-         ], function (on, Locator) {
-             var locator = new Locator("http://maps.decaturil.gov/arcgis/rest/services/Public/WebAddressLocator/GeocodeServer");
-             on(document.getElementById('btnTest'), 'click', function (e) {
-                 var node = document.getElementById('ownerAddress');
-                 // according to your service it takes Single Line  
-                 var params = {
-                     "Single Line Input": node.value
-                 };
-                 locator.addressToLocations(params).then(function (addressCandidates) {
-                     console.log('success', addressCandidates);
-                     var adresses = addressCandidates.map(function (x) {
-                         return x.address;
-                     });
-                     console.log(adresses);
-                 }).otherwise(function (err) {
-                     console.log('somethings wrong', err);
-                 });
-             });
-         });
+         var items
 
+
+         require([
+                 "dojo/on",
+                 "dojo/_base/array",
+                 "esri/tasks/locator",
+                 "dojox/grid/DataGrid",
+                 "dojo/data/ItemFileWriteStore",
+                 "dijit/registry", "dojo/parser",
+                 "dijit/registry",
+                 "dojo/dom",
+                 "dojo/_base/lang",
+                 "dijit/layout/ContentPane",
+                 "dojo/domReady!"
+         ],
+          function (on, arrayUtils, Locator, DataGrid, ItemFileWriteStore, registry, parser, registry, dom, lang) {
+              parser.parse();
+
+              var store, grid, data, layout, node;
+
+              //document.getElementById("grid").style.display = "none";
+
+
+              on(document.getElementById('ownerAddress'), 'focusout', checkAddress);
+
+              on(document.getElementById('ownerAddress'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress1'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress1'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress2'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress2'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress3'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress3'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress4'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress4'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress5'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress5'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress6'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress6'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress7'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress7'), 'focusin', getElementId);
+
+              on(document.getElementById('propertyAddress8'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress8'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress9'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress9'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress10'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress10'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress11'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress11'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress12'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress12'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress13'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress13'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress14'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress14'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress15'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress15'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress16'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress16'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress17'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress17'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress18'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress18'), 'focusin', getElementId);
+
+
+
+              on(document.getElementById('propertyAddress19'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress19'), 'focusin', getElementId);
+
+
+
+              on(document.getElementById('propertyAddress20'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress20'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress21'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress21'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress22'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress22'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress23'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress23'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress24'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress24'), 'focusin', getElementId);
+
+
+              on(document.getElementById('propertyAddress25'), 'focusout', checkAddress);
+
+              on(document.getElementById('propertyAddress25'), 'focusin', getElementId);
+
+
+              on(document.getElementById('tenantPropertyAddress1'), 'focusout', checkAddress);
+
+              on(document.getElementById('tenantPropertyAddress1'), 'focusin', getElementId);
+
+
+              on(document.getElementById('tenantPropertyAddress2'), 'focusout', checkAddress);
+
+              on(document.getElementById('tenantPropertyAddress2'), 'focusin', getElementId);
+
+
+              on(document.getElementById('tenantPropertyAddress3'), 'focusout', checkAddress);
+
+              on(document.getElementById('tenantPropertyAddress3'), 'focusin', getElementId);
+
+
+              on(document.getElementById('tenantPropertyAddress4'), 'focusout', checkAddress);
+
+              on(document.getElementById('tenantPropertyAddress4'), 'focusin', getElementId);
+
+
+              on(document.getElementById('tenantPropertyAddress5'), 'focusout', checkAddress);
+
+              on(document.getElementById('tenantPropertyAddress5'), 'focusin', getElementId);
+
+
+              on(document.getElementById('tenantPropertyAddress6'), 'focusout', checkAddress);
+
+              on(document.getElementById('tenantPropertyAddress6'), 'focusin', getElementId);
+
+
+
+
+
+              function getElementId() {
+
+                  node = document.activeElement.id;
+
+              }
+
+
+              function checkAddress() {
+                  console.log(node);
+                  var locator = new Locator("http://maps.decaturil.gov/arcgis/rest/services/Public/WebAddressLocator/GeocodeServer");
+                  //console.log(document.getElementById('ownerAddress').value);
+                  //node = document.getElementById('ownerAddress');
+                  node = document.getElementById(node);
+                  // according to your service it takes Single Line
+                  var params = {
+                      "Single Line Input": node.value
+                  };
+                  locator.addressToLocations(params).then(function (addressCandidates) {
+                      //console.log('success', addressCandidates);
+                      //console.log(addressCandidates.length);
+                      
+
+                      if ((addressCandidates.length >= 1) && (addressCandidates[0].address != node.value.toUpperCase())) {
+                          console.log(addressCandidates.length);
+                          
+                          data = {
+                              identifier: "id",
+                              items: []
+                          };
+
+                          layout = [[
+                         //   {'name': 'FID', 'field': 'id', 'width': '50px'},//
+                            { 'name': 'Address', 'field': 'address', 'width': '200px' }
+                          ]];
+                          if (addressCandidates.length >= 1) {
+                              for (a = 0; a < addressCandidates.length; a++) {
+
+                                  // This is the address that should go into a grid cell
+                                  data.items.push(lang.mixin({ id: a + 1 }, { address: addressCandidates[a].address }));
+                                  // address is here
+                                  console.log(addressCandidates[a].address);
+
+                              }
+                              console.log(addressCandidates);
+                              items = arrayUtils.map(addressCandidates, function (result) {
+                                  console.log(result);
+                                  return result;
+                              });
+                              console.log(items);
+                          }
+
+
+                          console.log("Log" + data);
+                          if (window.grid) {
+                              dojo.destroy('grid');
+                              dijit.byId('grid').destroy(true);
+                              registry.remove(dom.byId('gridDiv'));
+                          }
+                          store = new ItemFileWriteStore({ data: data });
+                          grid = new DataGrid({
+                              id: 'grid',
+                              store: store,
+                              structure: layout,
+                              autoWidth: true,
+                              autoHeight: false,
+                              rowSelector: '20px'
+                          });
+
+
+                          // display grid
+                          //document.getElementById("grid").style.display = "block";
+                          //alert("hello " + addressCandidates.length);
+                          // Show modal
+
+                          $("#myModal").modal("show");
+                          $('#myModal').show(function () {
+                              $(this).trigger('isVisible');
+
+
+                          });
+
+                          //registry.byId("grid").display=block;
+                          grid.on("rowclick", onRowClickHandler);
+                          //console.log(addressCandidates.length);
+
+
+                          //hookup the event
+                          $('#myModal').bind('isVisible', isVisible);
+
+                      }
+                      else {
+                          if (addressCandidates.length == 0) {
+                              alert("This does not appear to be an address in the city of Decatur. Please try again.");
+
+                              dom.byId(node).focus();
+                              dom.byId(node).value = "";
+                          }
+
+                      }
+                      var adresses = addressCandidates.map(function () {
+                          return x.address;
+
+                      });
+                      //console.log(adresses);
+
+
+                  })
+                      .otherwise(function (err) {
+
+                          console.log('somethings wrong', err);
+                      });
+
+              }
+
+
+              //declare event to run when div is visible
+              function isVisible() {
+                  /*append the new grid to the div*/
+                  grid.placeAt("gridDiv");
+                  /*Call startup() to render the grid*/
+                  grid.startup();
+
+              }
+
+              function onRowClickHandler(evt) {
+                  console.log(evt);
+                  var clickedAddress = evt.grid.getItem(evt.rowIndex).address;
+                  console.log(clickedAddress);
+                  alert(clickedAddress);
+                  dom.byId(node).value = clickedAddress;
+
+                  //  console.log(evt.explicitOriginalTarget.data);
+              }
+          });
      </script>
      <script>
          var ii = 2;
